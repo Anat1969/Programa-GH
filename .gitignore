@@ -1,0 +1,7 @@
+node_modules
+dist
+*.log
+shots/
+__pycache__/
+tsconfig.tsbuildinfo
+tsconfig.tsbuildinfo
