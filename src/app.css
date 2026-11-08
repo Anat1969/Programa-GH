@@ -245,3 +245,12 @@
 }
 .psec { min-width: 0; overflow: hidden; }
 .psec li > * { min-width: 0; overflow-wrap: anywhere; }
+
+/* מסלול העבודה בין שלוש האפליקציות */
+.chain-bar { display: inline-flex; align-items: center; gap: 4px; flex: 0 0 auto; }
+.chain-step { display: inline-flex; align-items: center; gap: 4px; }
+.chain-bar .chip { text-decoration: none; color: var(--ink); white-space: nowrap; font-size: 12px; }
+.chain-bar .chip.is-on { background: var(--ink); color: #fff; }
+.chain-bar .chip b { font-size: 11px; margin-inline-end: 2px; }
+.chain-arrow { font-family: var(--mono); color: var(--ink-mute); font-size: 12px; }
+.dock-sep { width: 1px; align-self: stretch; background: var(--rule); margin: 0 4px; }

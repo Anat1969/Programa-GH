@@ -19,7 +19,7 @@ export default function Controls({ inputs, city, set, compact = false }: { input
       <label className="ctl"><span className="label">יחידות דיור</span>
         <input className="field num" inputMode="numeric" value={inputs.units} onChange={(e) => set({ u: num(e.target.value) || '20' })} />
       </label>
-      <fieldset className="ctl mixset"><legend className="label">תמהיל, % לפי מ"ר</legend>
+      <fieldset className="ctl mixset"><legend className="label">תמהיל, % מהדירות</legend>
         {MIX.map(([k, l]) => (
           <label key={k} className="mixf"><span>{l}</span>
             <input className="field num" inputMode="numeric" aria-label={`תמהיל ${l} מ"ר, אחוזים`} value={inputs.mix[k]} onChange={(e) => mix(k, Number(num(e.target.value)) || 0)} />

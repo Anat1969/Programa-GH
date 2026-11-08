@@ -54,6 +54,12 @@ const BRIEF = {
     const sky = await p.locator('a', { hasText: 'גורד שחקים' }).getAttribute('href');
     ok(sky.startsWith('https://anat1969.github.io/SkySkiper-GH/#patch=') && JSON.parse(decodeURIComponent(sky.split('#patch=')[1].split('&')[0]))['body.height.floors'] > 10, 'העמדה: הבניין הגבוה נפתח בגורד שחקים');
 
+    const toTamhil = await p.locator('.chain-bar a', { hasText: 'תמהיל' }).getAttribute('href');
+    ok(toTamhil.startsWith('https://tamhil-gh.vercel.app/#/compare?a=42.42.84.42.1200.0') && /c=ashdod/.test(toTamhil), 'שרשרת: לתמהיל עם תמהיל השכונה (' + toTamhil + ')');
+    ok((await p.locator('.chain-bar a', { hasText: 'מגדל' }).getAttribute('href')).startsWith('https://anat1969.github.io/SkySkiper-GH/#patch='), 'שרשרת: למגדל הגבוה');
+    await p.goto(BASE + '#/program?m=33.27.27.13&c=ashdod', { waitUntil: 'networkidle' });
+    ok((await p.locator('.mixset input').first().inputValue()) === '33', 'שרשרת: התמהיל מהתמהיל נקלט בפרוגרמה');
+    await p.goto(BASE + '#/site?u=500&a=A', { waitUntil: 'networkidle' }); await p.waitForTimeout(800);
     await p.locator('.dock button', { hasText: 'מצגת' }).click(); await p.waitForTimeout(500);
     ok(await p.locator('.show .s-cover').isVisible(), 'מצגת: שקף פתיחה');
     await p.keyboard.press('ArrowLeft'); await p.waitForTimeout(800);
