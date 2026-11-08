@@ -76,6 +76,19 @@ const BRIEF = {
     await p.locator('.dock .primary').click(); await p.waitForSelector('.brief .tone-problem');
     ok((await p.locator('.brief .tone-problem').innerText()).includes('הציונים במסך'), 'ניסוח: כשל מוצג בבירור');
 
+    // מסלול: שתי נקודות מבט, ארבעה שלבים, ותיק שעובר
+    await p.goto(BASE + '#/path?r=city&lot=101', { waitUntil: 'networkidle' });
+    ok((await p.locator('.stage h2').allInnerTexts()).join('>') === 'תב"ע>פרוגרמה>תמהיל>מגדל', 'מסלול עירייה: תב"ע, פרוגרמה, תמהיל, מגדל');
+    await p.locator('.role').nth(1).click(); await p.waitForTimeout(200);
+    ok((await p.locator('.stage h2').allInnerTexts()).join('>') === 'תב"ע>תמהיל>פרוגרמה>מגדל', 'מסלול יזם: תב"ע, תמהיל, פרוגרמה, מגדל');
+    const ph = await p.locator('.stage a').evaluateAll((as) => as.map((a) => a.href));
+    ok(ph[0].includes('chalufot-gh.vercel.app/#/studio?plan=tml-2022&lot=101'), 'מסלול: התב"ע נפתחת בחלופה שעוברת בדיקה, על התוכנית והמגרש');
+    const progHref = ph.find((h) => h.includes('programa-gh'));
+    await p.goto(progHref.replace('https://programa-gh.vercel.app/', BASE), { waitUntil: 'networkidle' }); await p.waitForTimeout(500);
+    const st = (await p.locator('.strip').innerText()).replace(/\s+/g, ' ');
+    ok(/תמל\/2022, מגרש 101/.test(st) && /11,034/.test(st) && /חסרים 6,014/.test(st), 'תיק בפרוגרמה: 2,160 יח"ד, ציבור נדרש 11,034 מול 5,020 בתב"ע (' + st.slice(0, 120) + ')');
+    ok(/d=/.test(await p.locator('.topbar .chain-bar a', { hasText: 'תמהיל' }).getAttribute('href')), 'תיק בפרוגרמה: הקישור לתמהיל נושא את התיק');
+
     await p.goto(BASE + '#/method', { waitUntil: 'networkidle' });
     ok(await p.locator('.notes tr').count() === 9, 'שיטה: כלל מדידה לכל מדד');
     ok(await p.locator('.museum blockquote').isVisible(), 'שיטה: ציטוט עם מקור');

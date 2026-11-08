@@ -7,8 +7,8 @@ const hit = (a: Rect, b: Rect) => a.x < b.x + b.w - 0.01 && b.x < a.x + a.w - 0.
 const inside = (a: Rect, s: Rect) => a.x >= s.x - 0.01 && a.y >= s.y - 0.01 && a.x + a.w <= s.x + s.w + 0.01 && a.y + a.d <= s.y + s.d + 0.01;
 
 describe('layouts', () => {
-  for (const units of [200, 500, 900]) {
-    const p = calculate(units, 3.5), i = { ...I, units };
+  for (const [units, W, D] of [[200, 300, 240], [500, 300, 240], [900, 300, 240], [2160, 520, 416]]) {
+    const p = calculate(units, 3.5), i = { ...I, units, siteW: W, siteD: D };
     for (const L of layouts(p, i)) {
       it(`${L.key} ${units} units: no overlaps, inside site, all public placed, GFA covered`, () => {
         const solids: (Rect & { id: string })[] = [...L.boxes, ...L.parks.map((r, k) => ({ ...r, id: 'park' + k })), ...L.streets.map((r, k) => ({ ...r, id: 'st' + k })), ...L.plaza.map((r) => ({ ...r, id: 'plaza' })), ...L.surfaceParking.map((r, k) => ({ ...r, id: 'lot' + k }))];

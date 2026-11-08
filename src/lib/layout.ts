@@ -118,7 +118,7 @@ function altA(p: Program, i: Inputs): Layout {
   const boxes: Box[] = [];
   let civic = inner(plaza, -4);
   let placed: (Rect | null)[] = [];
-  for (let grow = 0; grow < 8; grow++) {
+  for (let grow = 0; grow < 40; grow++) {
     const frame = inner(plaza, -(4 + 26 + grow * 6));
     const zones = [
       { x: frame.x, y: frame.y, w: frame.w, d: plaza.y - 4 - frame.y },                 // דרום
@@ -128,9 +128,9 @@ function altA(p: Program, i: Inputs): Layout {
     const half = Math.ceil(items.length / 2);
     const a = pack(zones[0], items.slice(0, half), 4), b = pack(zones[1], items.slice(half), 4);
     placed = [...a, ...b];
-    if (placed.every(Boolean)) {
+    if (placed.every(Boolean) || grow === 39) {
       civic = frame;
-      items.forEach((it, k) => { const r = placed[k]!; boxes.push({ ...r, id: it.row.id, label: it.row.label, use: it.row.use as BUse, floors: it.floors, fh: FH_PUB }); });
+      items.forEach((it, k) => { const r = placed[k]; if (r) boxes.push({ ...r, id: it.row.id, label: it.row.label, use: it.row.use as BUse, floors: it.floors, fh: FH_PUB }); });
       break;
     }
   }
@@ -165,7 +165,7 @@ function altA(p: Program, i: Inputs): Layout {
 }
 
 // ---------- ב: רחוב ראשי, בלוקים היקפיים ----------
-function altB(p: Program, i: Inputs): Layout {
+function altB(p: Program, i: Inputs, extra = 0): Layout {
   const site = { x: 0, y: 0, w: i.siteW, d: i.siteD };
   const parkW = Math.max(20, Math.min(70, p.openSpace / (site.d - 2 * STREET)));
   const main = { x: STREET + parkW, y: site.d / 2 - MAIN / 2, w: site.w - 2 * STREET - parkW, d: MAIN };
@@ -173,7 +173,7 @@ function altB(p: Program, i: Inputs): Layout {
   const pub = pubBoxes(p);
   const boxes: Box[] = [];
   // קמפוס ציבורי בקצה המזרחי, בשני צדי הרחוב
-  const campusW = Math.max(56, Math.min(90, Math.ceil(pub.reduce((a, b) => a + b.w * b.d, 0) / ((site.d - 2 * STREET - MAIN) * 0.55) / 2) * 2 + 20));
+  const campusW = Math.min(site.w * 0.45, Math.max(56, Math.min(90, Math.ceil(pub.reduce((a, b) => a + b.w * b.d, 0) / ((site.d - 2 * STREET - MAIN) * 0.55) / 2) * 2 + 20)) + extra);
   const cx = site.w - STREET - campusW;
   const campus = [{ x: cx + 4, y: STREET + 4, w: campusW - 8, d: main.y - STREET - 8 }, { x: cx + 4, y: main.y + MAIN + 4, w: campusW - 8, d: site.d - STREET - main.y - MAIN - 8 }];
   // מוסדות קטנים קודם, צמוד לרחוב: ממיינים כך שהגדולים בפינה
@@ -189,6 +189,8 @@ function altB(p: Program, i: Inputs): Layout {
   };
   placeHalf(campus[0], pub.slice(0, half), true);
   placeHalf(campus[1], pub.slice(half), false);
+  // קמפוס צר מדי לכל מבני הציבור: מרחיבים ומעמידים מחדש
+  if (boxes.length < pub.length && campusW < site.w * 0.45) return altB(p, i, extra + 20);
   // פארק לינארי בקצה המערבי, והרחוב הראשי נגמר בו
   const parks: Layout['parks'] = [{ x: STREET, y: STREET, w: parkW, d: site.d - 2 * STREET, label: 'פארק מערבי' }];
   // ארבעה בלוקים היקפיים, רחוב מקומי צפון־דרום ביניהם

@@ -1,23 +1,20 @@
-// מסלול העבודה: שלוש אפליקציות, שאלה אחת לכל שלב. הנתונים עוברים בכתובת, בלי להקליד שוב.
+// מסלול העבודה: ארבעה שלבים לפי נקודת המבט (עירייה או יזם). כל שלב הוא קישור שנושא את תיק הפרויקט.
 // אותו רכיב בפרוגרמה בהעמדה (Programa-GH) ובאיזה תמהיל עדיף (Tamhil-GH). שינוי כאן נעשה בשניהם.
-export const CHAIN = [
-  { n: 1, label: 'פרוגרמה', q: 'מה השכונה צריכה, ואיך מעמידים', home: 'https://programa-gh.vercel.app/' },
-  { n: 2, label: 'תמהיל', q: 'איזה תמהיל מחזיק תקציב', home: 'https://tamhil-gh.vercel.app/' },
-  { n: 3, label: 'מגדל', q: 'איך הבניין נראה', home: 'https://anat1969.github.io/SkySkiper-GH/' },
-] as const;
+import { PATHS, ROLES, type Role, type StepId } from '../lib/dossier';
 
-export default function Chain({ step, links }: { step: 1 | 2 | 3; links: Partial<Record<1 | 2 | 3, string | null>> }) {
+export default function Chain({ role, current, links }: { role: Role; current: StepId; links: Partial<Record<StepId, string | null>> }) {
   return (
-    <nav className="chain-bar" aria-label="מסלול העבודה בין שלוש האפליקציות">
-      {CHAIN.map((c, i) => {
-        const here = c.n === step;
-        const href = links[c.n] ?? c.home;
+    <nav className="chain-bar" aria-label={`מסלול העבודה, ${ROLES[role].label}`}>
+      <span className="chain-role label">{ROLES[role].label}</span>
+      {PATHS[role].map((s, i) => {
+        const here = s.id === current;
+        const href = links[s.id];
         return (
-          <span key={c.n} className="chain-step">
+          <span key={s.id} className="chain-step">
             {i > 0 && <span className="chain-arrow" aria-hidden="true">←</span>}
-            {here
-              ? <span className="press chip is-on" aria-current="step" title={c.q}><b className="num">{c.n}</b> <span className="lbl">{c.label}</span></span>
-              : <a className="press chip" href={href} target={c.n === 3 ? '_blank' : undefined} rel="noreferrer" title={`${c.q}, עם הנתונים מכאן`}><b className="num">{c.n}</b> <span className="lbl">{c.label}</span></a>}
+            {here || !href
+              ? <span className={`press chip${here ? ' is-on' : ' off'}`} aria-current={here ? 'step' : undefined} title={s.q}><b className="num">{i + 1}</b> <span className="lbl">{s.short}</span></span>
+              : <a className="press chip" href={href} target={s.id === 'tower' || s.id === 'taba' ? '_blank' : undefined} rel="noreferrer" title={`${s.q}. ${s.app}, עם תיק הפרויקט`}><b className="num">{i + 1}</b> <span className="lbl">{s.short}</span></a>}
           </span>
         );
       })}

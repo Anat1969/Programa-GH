@@ -15,7 +15,7 @@ export function usePlan() {
   const { q } = useRoute();
   const saved = load();
   const get = (k: keyof typeof DEF) => q.get(k) ?? saved[k] ?? DEF[k];
-  const units = clampN(parseInt(get('u'), 10) || 500, 20, 1500);
+  const units = clampN(parseInt(get("u"), 10) || 500, 20, 5000);
   const city = CITIES.find((x) => x.id === get('c')) ?? CITIES[0];
   const mm = get('m').split('.').map((x) => clampN(parseInt(x, 10) || 0, 0, 100));
   const mix: Mix = { small: mm[0] ?? 20, medium: mm[1] ?? 20, large: mm[2] ?? 40, xl: mm[3] ?? 20 };
