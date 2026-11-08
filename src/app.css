@@ -254,3 +254,11 @@
 .chain-bar .chip b { font-size: 11px; margin-inline-end: 2px; }
 .chain-arrow { font-family: var(--mono); color: var(--ink-mute); font-size: 12px; }
 .dock-sep { width: 1px; align-self: stretch; background: var(--rule); margin: 0 4px; }
+/* השרשרת בסרגל העליון: עמודה בין הניווט ללוגו */
+.topbar-in { grid-template-columns: auto minmax(0, 1fr) auto auto; }
+.topbar .chain-bar { margin-inline-end: 8px; }
+@media (max-width: 900px) {
+  .topbar .chain-bar .chip { padding: 4px 7px; }
+  .topbar .chain-bar .chip .lbl { display: none; }
+  .topbar .chain-arrow { display: none; }
+}

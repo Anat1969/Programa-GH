@@ -5,13 +5,23 @@ import Home from './pages/Home';
 import ProgramPage from './pages/Program';
 import SitePage from './pages/Site';
 import Method from './pages/Method';
+import Chain from './components/Chain';
+import { usePlan } from './lib/state';
+import { tamhilLink } from './lib/links';
+import { skyskiperLink } from './lib/sky';
+import { ranking } from './lib/insights';
 
 const NAV: [string, string][] = [['/', 'בית'], ['/program', 'פרוגרמה'], ['/site', 'העמדה'], ['/method', 'שיטה']];
 interface BIPEvent extends Event { prompt: () => Promise<void> }
 const keep = () => Object.fromEntries(new URLSearchParams(location.hash.split('?')[1] ?? ''));
 
 export default function App() {
-  const { path } = useRoute();
+  const { path, q } = useRoute();
+  const plan = usePlan();
+  // השרשרת בסרגל העליון, בכל דף: לתמהיל עם תמהיל השכונה, ולמגדל עם הבניין הגבוה של החלופה הנבחרת או המובילה
+  const selKey = q.get('a') || ranking(plan.scores)[0].key;
+  const selAlt = plan.alts.find((x) => x.key === selKey) ?? plan.alts[0];
+  const chainLinks = { 2: tamhilLink(plan.inputs, plan.city.id), 3: skyskiperLink(selAlt) };
   const [install, setInstall] = useState<BIPEvent | null>(null);
   useEffect(() => {
     const on = (e: Event) => { e.preventDefault(); setInstall(e as BIPEvent); };
@@ -41,6 +51,7 @@ export default function App() {
               <button key={p} className="tab" aria-current={(p === '/' ? path === '/' : path.startsWith(p)) ? 'page' : undefined} onClick={() => go(p, keep())}>{l}</button>
             ))}
           </nav>
+          <Chain step={1} links={chainLinks} />
           <AIMenu items={items} status="" />
         </div>
       </header>

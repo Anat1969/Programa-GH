@@ -4,8 +4,6 @@ import Controls from '../components/Controls';
 import { usePlan } from '../lib/state';
 import { n0, programInsight } from '../lib/insights';
 import { go } from '../lib/route';
-import Chain from '../components/Chain';
-import { tamhilLink } from '../lib/links';
 import type { Section } from '../data/program';
 
 const HEAD: Record<string, string> = { edu: 'מ"ר חינוך', pub: 'מ"ר ציבור ומסחר', open: 'מ"ר שצ"פ', park: 'חניות' };
@@ -69,8 +67,6 @@ export default function ProgramPage() {
 
       <nav className="dock" aria-label="פעולות">
         <div className="dock-in">
-          <Chain step={1} links={{ 2: tamhilLink(inputs, city.id) }} />
-          <span className="dock-sep" />
           <span className="label">הלמ"ס 2023 · {city.name} · {city.coefficient} נפש ליח"ד</span>
           <span className="dock-gap" />
           <button className="press btn primary" onClick={() => go('/site', Object.fromEntries(new URLSearchParams(location.hash.split('?')[1] ?? '')))}>להעמדה בשלוש חלופות</button>

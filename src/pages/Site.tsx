@@ -7,14 +7,12 @@ import { usePlan } from '../lib/state';
 import { useRoute, setParams } from '../lib/route';
 import { LET, altInsight, divider, n0, programInsight, ranking, siteHeadline } from '../lib/insights';
 import { skyskiperLink } from '../lib/sky';
-import { tamhilLink } from '../lib/links';
-import Chain from '../components/Chain';
 import { requestBrief, type Brief } from '../lib/ai';
 
 const USES: [string, string][] = [['res', 'מגורים'], ['com', 'מסחר'], ['edu', 'חינוך'], ['pub', 'ציבור'], ['park', 'שצ"פ'], ['lot', 'חניה על הקרקע']];
 
 export default function SitePage() {
-  const { program: p, alts, scores, inputs, city } = usePlan();
+  const { program: p, alts, scores } = usePlan();
   const { q } = useRoute();
   const top = ranking(scores)[0].key;
   const sel = (q.get('a') as 'A' | 'B' | 'C') || top;
@@ -105,8 +103,6 @@ export default function SitePage() {
 
       <nav className="dock" aria-label="פעולות">
         <div className="dock-in">
-          <Chain step={1} links={{ 2: tamhilLink(inputs, city.id), 3: sky }} />
-          <span className="dock-sep" />
           <span className="label">חלופה</span>
           {alts.map((A) => <button key={A.key} className="press chip" aria-pressed={A.key === sel} onClick={() => setParams({ a: A.key })}>{LET[A.key]} · {A.name}</button>)}
           <span className="dock-gap" />

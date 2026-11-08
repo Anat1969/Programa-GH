@@ -16,8 +16,8 @@ export default function Chain({ step, links }: { step: 1 | 2 | 3; links: Partial
           <span key={c.n} className="chain-step">
             {i > 0 && <span className="chain-arrow" aria-hidden="true">←</span>}
             {here
-              ? <span className="press chip is-on" aria-current="step" title={c.q}><b className="num">{c.n}</b> {c.label}</span>
-              : <a className="press chip" href={href} target={c.n === 3 ? '_blank' : undefined} rel="noreferrer" title={`${c.q}, עם הנתונים מכאן`}><b className="num">{c.n}</b> {c.label}</a>}
+              ? <span className="press chip is-on" aria-current="step" title={c.q}><b className="num">{c.n}</b> <span className="lbl">{c.label}</span></span>
+              : <a className="press chip" href={href} target={c.n === 3 ? '_blank' : undefined} rel="noreferrer" title={`${c.q}, עם הנתונים מכאן`}><b className="num">{c.n}</b> <span className="lbl">{c.label}</span></a>}
           </span>
         );
       })}
